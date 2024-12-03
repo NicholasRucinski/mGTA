@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=3 uid="uid://dl2ed4gkybggf"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_ffboj"]
+[ext_resource type="PackedScene" uid="uid://c0e27836xgmhi" path="res://objects/character.tscn" id="2_nero3"]
+[ext_resource type="Texture2D" uid="uid://8ggihh27mlrr" path="res://sprites/blob_shadow.png" id="3_0c7wt"]
+[ext_resource type="ArrayMesh" uid="uid://deu06eho4c74" path="res://meshes/dust.res" id="4_mvhqy"]
+[ext_resource type="AudioStream" uid="uid://cydjn1ct3hps2" path="res://sounds/walking.ogg" id="5_ics1s"]
+[ext_resource type="Script" path="res://scripts/view.gd" id="6_1gpxk"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gdq8c"]
+radius = 0.3
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q7stj"]
+diffuse_mode = 2
+specular_mode = 2
+metallic_specular = 0.0
+backlight = Color(0, 0.521569, 0.709804, 1)
+billboard_keep_scale = true
+grow_amount = 1.882
+proximity_fade_distance = 0.25
+
+[sub_resource type="Curve" id="Curve_xh1e2"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.249284, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qjcml"]
+
+[node name="Player" type="Node3D"]
+
+[node name="PlayerController" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_ffboj")
+
+[node name="Collider" type="CollisionShape3D" parent="PlayerController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("CapsuleShape3D_gdq8c")
+
+[node name="Character" parent="PlayerController" instance=ExtResource("2_nero3")]
+
+[node name="Shadow" type="Decal" parent="PlayerController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
+size = Vector3(1, 2, 1)
+texture_albedo = ExtResource("3_0c7wt")
+modulate = Color(1, 1, 1, 0.705882)
+normal_fade = 0.5
+
+[node name="ParticlesTrail" type="CPUParticles3D" parent="PlayerController"]
+material_override = SubResource("StandardMaterial3D_q7stj")
+cast_shadow = 0
+amount = 60
+mesh = ExtResource("4_mvhqy")
+emission_shape = 1
+emission_sphere_radius = 0.2
+particle_flag_align_y = true
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0.1, 0)
+scale_amount_min = 0.75
+scale_amount_curve = SubResource("Curve_xh1e2")
+
+[node name="SoundFootsteps" type="AudioStreamPlayer" parent="PlayerController"]
+stream = ExtResource("5_ics1s")
+volume_db = -5.0
+pitch_scale = 1.25
+autoplay = true
+
+[node name="Camera3D" type="Camera3D" parent="PlayerController"]
+transform = Transform3D(-0.99863, 0.00228287, -0.0522862, 0, 0.999048, 0.0436194, 0.052336, 0.0435596, -0.997679, -1.231, 1.422, -5.326)
+fov = 40.0
+
+[node name="Area3D" type="Area3D" parent="PlayerController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerController/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07504, 0.780822)
+shape = SubResource("SphereShape3D_qjcml")
+
+[node name="View" type="Node3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(-1, -3.69465e-08, 7.92319e-08, 0, 0.906308, 0.422618, -8.74228e-08, 0.422618, -0.906307, 0, 0.5, 0)
+script = ExtResource("6_1gpxk")
+target = NodePath("../PlayerController")
+rotation_speed = 1.0
+
+[node name="Camera" type="Camera3D" parent="View"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+current = true
+fov = 40.0
+
+[connection signal="area_entered" from="PlayerController/Area3D" to="PlayerController" method="_on_area_3d_area_entered"]
+[connection signal="area_exited" from="PlayerController/Area3D" to="PlayerController" method="_on_area_3d_area_exited"]
+
+[editable path="PlayerController/Character"]
