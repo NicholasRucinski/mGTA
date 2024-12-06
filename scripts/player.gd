@@ -37,11 +37,9 @@ func _physics_process(delta):
 
 	handle_controls(delta)
 	handle_gravity(delta)
-
 	handle_effects(delta)
 
 	# Movement
-
 	var applied_velocity: Vector3
 
 	applied_velocity = velocity.lerp(movement_velocity, delta * 10)
@@ -52,9 +50,11 @@ func _physics_process(delta):
 
 	# Rotation
 
-	if Vector2(velocity.z, velocity.x).length() > 0:
-		rotation_direction = Vector2(velocity.z, velocity.x).angle()
-
+	if !view.aiming:
+		if Vector2(velocity.z, velocity.x).length() > 0:
+			rotation_direction = Vector2(velocity.z, velocity.x).angle()
+	
+	
 	rotation.y = lerp_angle(rotation.y, rotation_direction, delta * 10)
 
 	# Falling/respawning
@@ -75,7 +75,6 @@ func _physics_process(delta):
 	previously_floored = is_on_floor()
 
 # Handle animation(s)
-
 func handle_effects(delta):
 
 	particles_trail.emitting = false
@@ -101,21 +100,24 @@ func handle_effects(delta):
 		animation.play("jump", 0.1)
 
 # Handle movement input
-
 func handle_controls(delta):
 	# Movement
 	if vehicle != null:
 		global_transform.origin = vehicle.global_transform.origin
 		if Input.is_action_just_pressed("select"):
-			vehicle = null
+			get_out_of_vehicle()
 		return
+		
 	var input := Vector3.ZERO
 
 	input.x = Input.get_axis("move_left", "move_right")
 	input.z = Input.get_axis("move_forward", "move_back")
 	
-	input = input.rotated(Vector3.UP, view.rotation.y)
-
+	if view.aiming:
+		input = -input.rotated(Vector3.UP, rotation.y)
+	else:
+		input = input.rotated(Vector3.UP, view.rotation.y)
+		
 	if input.length() > 1:
 		input = input.normalized()
 
@@ -124,14 +126,10 @@ func handle_controls(delta):
 	# Handle Vehicle
 	
 	if Input.is_action_just_pressed("select") and current_area != null:
-		vehicle = current_area
-		collider.disabled = true
-		print("Vehicle set to: ", vehicle)
+		get_into_vehicle()
 
 	# Jumping
-
 	if Input.is_action_just_pressed("jump"):
-
 		if jump_single or jump_double:
 			jump()
 			
@@ -169,11 +167,18 @@ func jump():
 # Collecting coins
 
 func collect_coin():
-
 	coins += 1
-
 	coin_collected.emit(coins)
 
+func get_into_vehicle() -> void:
+	hide()
+	vehicle = current_area
+	set_collision_layer_value(1, 0)
+	
+func get_out_of_vehicle() -> void:
+	show()
+	vehicle.get_parent_node_3d().deactivate()
+	vehicle = null
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("selectable"):

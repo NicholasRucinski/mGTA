@@ -64,10 +64,6 @@ volume_db = -5.0
 pitch_scale = 1.25
 autoplay = true
 
-[node name="Camera3D" type="Camera3D" parent="PlayerController"]
-transform = Transform3D(-0.99863, 0.00228287, -0.0522862, 0, 0.999048, 0.0436194, 0.052336, 0.0435596, -0.997679, -1.231, 1.422, -5.326)
-fov = 40.0
-
 [node name="Area3D" type="Area3D" parent="PlayerController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
@@ -84,6 +80,10 @@ rotation_speed = 1.0
 [node name="Camera" type="Camera3D" parent="View"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 current = true
+fov = 40.0
+
+[node name="Camera3D" type="Camera3D" parent="View"]
+transform = Transform3D(0.99863, -0.00228287, 0.0522863, 0.0221182, 0.923854, -0.382105, -0.0474326, 0.382738, 0.92264, 1.231, -0.962096, 5.42796)
 fov = 40.0
 
 [connection signal="area_entered" from="PlayerController/Area3D" to="PlayerController" method="_on_area_3d_area_entered"]

@@ -33,7 +33,6 @@ func _physics_process(delta):
 	rotation_degrees = rotation_degrees.lerp(camera_rotation, delta * 6)
 	if not aiming:
 		camera.position = camera.position.lerp(Vector3(0, 0, zoom), 8 * delta)
-
 # Handle input
 
 func _input(event: InputEvent) -> void:
@@ -44,7 +43,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if Input.is_mouse_button_pressed(2):
 			aiming = true
-			camera = $"../PlayerController/Camera3D"
+			camera = $"Camera3D"
 			camera.current = true
 		else:
 			aiming = false
@@ -60,6 +59,7 @@ func _input(event: InputEvent) -> void:
 		#input.x = Input.get_axis("camera_up", "camera_down").limit_length(1.0)
 		camera_rotation += input * rotation_speed
 		camera_rotation.x = clamp(camera_rotation.x, -70, 0)
+		print(camera_rotation)
 		
 		# Zooming
 		
