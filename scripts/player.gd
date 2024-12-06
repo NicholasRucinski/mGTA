@@ -53,6 +53,9 @@ func _physics_process(delta):
 	if !view.aiming:
 		if Vector2(velocity.z, velocity.x).length() > 0:
 			rotation_direction = Vector2(velocity.z, velocity.x).angle()
+	else:
+		var camera_forward = -view.global_transform.basis.z.normalized()
+		rotation_direction = atan2(camera_forward.x, camera_forward.z)
 	
 	
 	rotation.y = lerp_angle(rotation.y, rotation_direction, delta * 10)

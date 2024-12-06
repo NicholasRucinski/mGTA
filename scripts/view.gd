@@ -59,7 +59,6 @@ func _input(event: InputEvent) -> void:
 		#input.x = Input.get_axis("camera_up", "camera_down").limit_length(1.0)
 		camera_rotation += input * rotation_speed
 		camera_rotation.x = clamp(camera_rotation.x, -70, 0)
-		print(camera_rotation)
 		
 		# Zooming
 		
