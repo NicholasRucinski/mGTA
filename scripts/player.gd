@@ -4,6 +4,7 @@ signal coin_collected
 
 #@export_subgroup("Components")
 @onready var view: Node3D = $"../View"
+@onready var camera: Node3D = view.get_node_or_null("Camera")
 
 @export_subgroup("Properties")
 @export var movement_speed = 250
@@ -29,10 +30,25 @@ var coins = 0
 @export var vehicle : Node3D
 var current_area: Area3D = null
 
+# Multiplayer
+
 # Functions
 
-func _physics_process(delta):
+func _enter_tree() -> void:
+	set_multiplayer_authority(str(name).to_int())
+	#var is_local = is_multiplayer_authority()
+	#set_process_input(is_local)
+	#set_physics_process(is_local)
+	#set_process(is_local)
 
+func _ready() -> void:
+	if not is_multiplayer_authority():
+		return
+	camera.current = true
+
+func _physics_process(delta):
+	if not is_multiplayer_authority():
+		return
 	# Handle functions
 
 	handle_controls(delta)
@@ -42,6 +58,7 @@ func _physics_process(delta):
 	# Movement
 	var applied_velocity: Vector3
 
+	
 	applied_velocity = velocity.lerp(movement_velocity, delta * 10)
 	applied_velocity.y = -gravity
 
@@ -110,7 +127,7 @@ func handle_controls(delta):
 		if Input.is_action_just_pressed("select"):
 			get_out_of_vehicle()
 		return
-		
+	
 	var input := Vector3.ZERO
 
 	input.x = Input.get_axis("move_left", "move_right")
@@ -125,6 +142,8 @@ func handle_controls(delta):
 		input = input.normalized()
 
 	movement_velocity = input * movement_speed * delta
+	if Input.is_action_pressed("sprint"):
+		movement_velocity *= 1.75
 	
 	# Handle Vehicle
 	
@@ -136,9 +155,6 @@ func handle_controls(delta):
 		if jump_single or jump_double:
 			jump()
 			
-	if Input.is_action_just_pressed("quit"):
-		get_tree().free()
-
 # Handle gravity
 
 func handle_gravity(delta):
@@ -177,11 +193,13 @@ func get_into_vehicle() -> void:
 	hide()
 	vehicle = current_area
 	set_collision_layer_value(1, 0)
+	$Area3D.monitoring = false
 	
 func get_out_of_vehicle() -> void:
 	show()
 	vehicle.get_parent_node_3d().deactivate()
 	vehicle = null
+	$Area3D.monitoring = true
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("selectable"):

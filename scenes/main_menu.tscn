@@ -10,6 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5ffka")
+metadata/_edit_lock_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -37,11 +38,16 @@ text = "Game"
 
 [node name="Button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Start Demo"
+text = "Start Server"
 
 [node name="Button2" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Start City"
+text = "Join Server"
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Button" to="." method="on_start_demo_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Button2" to="." method="on_start_city_pressed"]
+[node name="TextEdit" type="TextEdit" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+placeholder_text = "Enter Name"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Button" to="." method="on_start_server_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Button2" to="." method="on_start_client_pressed"]

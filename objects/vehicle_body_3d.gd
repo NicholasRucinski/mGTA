@@ -13,6 +13,9 @@ func _process(delta: float) -> void:
 	
 func _physics_process(delta: float) -> void:
 	if !is_active:
+		steering = 0
+		$"wheel-bl".engine_force = 0
+		$"wheel-br".engine_force = 0
 		return
 	steering = move_toward(steering, Input.get_axis("move_right", "move_left") * max_steering, delta * 5)
 	var acceleration = Input.get_axis("move_back", "move_forward")
@@ -25,7 +28,10 @@ func _physics_process(delta: float) -> void:
 
 
 func activate() -> void:
-	is_active = !is_active
+	is_active = true
 	
 func deactivate() -> void:
 	is_active = false
+	steering = 0
+	$"wheel-bl".engine_force = 0
+	$"wheel-br".engine_force = 0

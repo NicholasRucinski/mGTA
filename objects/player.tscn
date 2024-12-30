@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dl2ed4gkybggf"]
+[gd_scene load_steps=12 format=3 uid="uid://dl2ed4gkybggf"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ffboj"]
 [ext_resource type="PackedScene" uid="uid://c0e27836xgmhi" path="res://objects/character.tscn" id="2_nero3"]
@@ -25,6 +25,17 @@ _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.249284, 1), 0.0, 0.0, 0, 0, Ve
 point_count = 3
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_qjcml"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dnnp5"]
+properties/0/path = NodePath(".:peer_id")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Player" type="Node3D"]
 
@@ -85,6 +96,10 @@ fov = 40.0
 [node name="Camera3D" type="Camera3D" parent="View"]
 transform = Transform3D(0.99863, -0.00228287, 0.0522863, 0.0221182, 0.923854, -0.382105, -0.0474326, 0.382738, 0.92264, 1.231, -0.962096, 5.42796)
 fov = 40.0
+
+[node name="Synchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../PlayerController")
+replication_config = SubResource("SceneReplicationConfig_dnnp5")
 
 [connection signal="area_entered" from="PlayerController/Area3D" to="PlayerController" method="_on_area_3d_area_entered"]
 [connection signal="area_exited" from="PlayerController/Area3D" to="PlayerController" method="_on_area_3d_area_exited"]
