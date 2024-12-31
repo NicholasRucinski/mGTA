@@ -10,7 +10,7 @@ signal coin_collected
 @export var movement_speed = 250
 @export var jump_strength = 7
 
-var movement_velocity: Vector3
+@export var movement_velocity: Vector3
 var rotation_direction: float
 var gravity = 0
 
@@ -30,42 +30,28 @@ var coins = 0
 @export var vehicle : Node3D
 var current_area: Area3D = null
 
-# Multiplayer
-
-# Functions
-
 func _enter_tree() -> void:
-	set_multiplayer_authority(str(name).to_int())
-	#var is_local = is_multiplayer_authority()
-	#set_process_input(is_local)
-	#set_physics_process(is_local)
-	#set_process(is_local)
+	set_multiplayer_authority(str(get_parent_node_3d().name).to_int())
 
 func _ready() -> void:
-	if not is_multiplayer_authority():
-		return
+	if not is_multiplayer_authority(): return
 	camera.current = true
 
 func _physics_process(delta):
 	if not is_multiplayer_authority():
+		print(get_parent_node_3d().name)
+		print(position)
 		return
-	# Handle functions
 
 	handle_controls(delta)
 	handle_gravity(delta)
 	handle_effects(delta)
 
-	# Movement
 	var applied_velocity: Vector3
-
-	
 	applied_velocity = velocity.lerp(movement_velocity, delta * 10)
 	applied_velocity.y = -gravity
 
 	velocity = applied_velocity
-	move_and_slide()
-
-	# Rotation
 
 	if !view.aiming:
 		if Vector2(velocity.z, velocity.x).length() > 0:
@@ -74,29 +60,22 @@ func _physics_process(delta):
 		var camera_forward = -view.global_transform.basis.z.normalized()
 		rotation_direction = atan2(camera_forward.x, camera_forward.z)
 	
-	
 	rotation.y = lerp_angle(rotation.y, rotation_direction, delta * 10)
-
-	# Falling/respawning
 
 	if position.y < -10:
 		get_tree().reload_current_scene()
 
-	# Animation for scale (jumping and landing)
-
 	model.scale = model.scale.lerp(Vector3(1, 1, 1), delta * 10)
-
-	# Animation when landing
 
 	if is_on_floor() and gravity > 2 and !previously_floored:
 		model.scale = Vector3(1.25, 0.75, 1.25)
 		Audio.play("res://sounds/land.ogg")
 
 	previously_floored = is_on_floor()
+	move_and_slide()
+	
 
-# Handle animation(s)
 func handle_effects(delta):
-
 	particles_trail.emitting = false
 	sound_footsteps.stream_paused = true
 
@@ -119,9 +98,8 @@ func handle_effects(delta):
 	elif animation.current_animation != "jump":
 		animation.play("jump", 0.1)
 
-# Handle movement input
 func handle_controls(delta):
-	# Movement
+	if not is_multiplayer_authority(): return
 	if vehicle != null:
 		global_transform.origin = vehicle.global_transform.origin
 		if Input.is_action_just_pressed("select"):
@@ -145,32 +123,24 @@ func handle_controls(delta):
 	if Input.is_action_pressed("sprint"):
 		movement_velocity *= 1.75
 	
-	# Handle Vehicle
-	
 	if Input.is_action_just_pressed("select") and current_area != null:
 		get_into_vehicle()
 
-	# Jumping
 	if Input.is_action_just_pressed("jump"):
 		if jump_single or jump_double:
 			jump()
-			
-# Handle gravity
 
 func handle_gravity(delta):
+	if not is_multiplayer_authority(): return
 	if vehicle != null:
 		return
 	gravity += 25 * delta
 
 	if gravity > 0 and is_on_floor():
-
 		jump_single = true
 		gravity = 0
 
-# Jumping
-
 func jump():
-
 	Audio.play("res://sounds/jump.ogg")
 
 	gravity = -jump_strength
@@ -182,8 +152,6 @@ func jump():
 		jump_double = true;
 	else:
 		jump_double = false;
-
-# Collecting coins
 
 func collect_coin():
 	coins += 1
@@ -205,7 +173,6 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("selectable"):
 		current_area = area
 		area.select()
-
 
 func _on_area_3d_area_exited(area: Area3D) -> void:
 	if area.is_in_group("selectable"):
