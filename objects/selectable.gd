@@ -6,19 +6,18 @@ extends Node3D
 
 var outline_material : ShaderMaterial
 
-var is_selected = false
-# Called when the node enters the scene tree for the first time.
+@export var is_selected = false
+
 func _ready() -> void:
 	outline_material = ShaderMaterial.new()
 	outline_material.shader = outline
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	#if not is_multiplayer_authority(): return
 	if is_selected and Input.is_action_just_pressed("select"):
 		object.activate()
 		print("get into car")
-	
+
 func select():
 	is_selected = !is_selected
 	if is_selected:

@@ -5,13 +5,15 @@ extends VehicleBody3D
 
 var max_rpm = 500
 var max_torque = 100
-var is_active = false
+@export var is_active = false
 
 func _process(delta: float) -> void:
+	#if not is_multiplayer_authority(): return
 	if Input.is_action_just_pressed("select") and is_active:
-		deactivate()
+		rpc("deactivate")
 	
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority(): return
 	if !is_active:
 		steering = 0
 		$"wheel-bl".engine_force = 0
@@ -23,15 +25,17 @@ func _physics_process(delta: float) -> void:
 	$"wheel-bl".engine_force = acceleration * max_torque * (1 - rpm / max_rpm)
 	rpm = $"wheel-br".get_rpm()
 	$"wheel-br".engine_force = acceleration * max_torque * (1 - rpm / max_rpm)
-	
-	
 
-
+@rpc("any_peer")
 func activate() -> void:
+	print("activate\n")
 	is_active = true
-	
+	print(str(multiplayer.get_unique_id()) + ": " + str(is_active))
+
+@rpc("any_peer")
 func deactivate() -> void:
 	is_active = false
+	print(str(multiplayer.get_unique_id()) + ": " + str(is_active))
 	steering = 0
 	$"wheel-bl".engine_force = 0
 	$"wheel-br".engine_force = 0

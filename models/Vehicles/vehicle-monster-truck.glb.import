@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cxk0eiv33ct8o"
-path="res://.godot/imported/vehicle-racer.glb-bed502962aa99df4a5c35933f49ba239.scn"
+uid="uid://cdvsxo4guq83f"
+path="res://.godot/imported/vehicle-monster-truck.glb-5cdece0b699eb7005d97d79e8ea79cc7.scn"
 
 [deps]
 
-source_file="res://models/vehicle-racer.glb"
-dest_files=["res://.godot/imported/vehicle-racer.glb-bed502962aa99df4a5c35933f49ba239.scn"]
+source_file="res://models/Vehicles/vehicle-monster-truck.glb"
+dest_files=["res://.godot/imported/vehicle-monster-truck.glb-5cdece0b699eb7005d97d79e8ea79cc7.scn"]
 
 [params]
 

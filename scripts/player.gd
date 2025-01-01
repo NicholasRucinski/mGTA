@@ -38,10 +38,7 @@ func _ready() -> void:
 	camera.current = true
 
 func _physics_process(delta):
-	if not is_multiplayer_authority():
-		print(get_parent_node_3d().name)
-		print(position)
-		return
+	if not is_multiplayer_authority(): return
 
 	handle_controls(delta)
 	handle_gravity(delta)

@@ -5,5 +5,5 @@
 [node name="Players" type="Node" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://objects/player.tscn")
+_spawnable_scenes = PackedStringArray("res://objects/player.tscn", "res://objects/car.tscn")
 spawn_path = NodePath("../Players")
