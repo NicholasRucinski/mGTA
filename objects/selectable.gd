@@ -15,8 +15,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	#if not is_multiplayer_authority(): return
 	if is_selected and Input.is_action_just_pressed("select"):
-		object.activate()
 		print("get into car")
+		object.activate()
 
 func select():
 	is_selected = !is_selected

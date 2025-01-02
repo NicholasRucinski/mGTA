@@ -14,6 +14,7 @@ func _process(delta: float) -> void:
 	
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
+	#print(is_active)
 	if !is_active:
 		steering = 0
 		$"wheel-bl".engine_force = 0
@@ -28,12 +29,13 @@ func _physics_process(delta: float) -> void:
 
 @rpc("any_peer")
 func activate() -> void:
-	print("activate\n")
+	print("activate")
 	is_active = true
 	print(str(multiplayer.get_unique_id()) + ": " + str(is_active))
 
 @rpc("any_peer")
 func deactivate() -> void:
+	print("deactivate")
 	is_active = false
 	print(str(multiplayer.get_unique_id()) + ": " + str(is_active))
 	steering = 0

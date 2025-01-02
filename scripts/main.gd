@@ -1,6 +1,6 @@
 extends Node
 
-const PORT : int = 1337
+const PORT : int = 9999
 var enet_peer = ENetMultiplayerPeer.new()
 
 @onready var main : Node = get_tree().root.get_node("Main")
