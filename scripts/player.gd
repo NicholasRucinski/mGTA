@@ -159,12 +159,14 @@ func get_into_vehicle() -> void:
 	vehicle = current_area
 	set_collision_layer_value(1, 0)
 	$Area3D.monitoring = false
+	sound_footsteps.playing = false
 	
 func get_out_of_vehicle() -> void:
 	show()
 	vehicle.get_parent_node_3d().deactivate()
 	vehicle = null
 	$Area3D.monitoring = true
+	sound_footsteps.playing = true
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("selectable"):
