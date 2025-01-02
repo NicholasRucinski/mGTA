@@ -1,6 +1,6 @@
 extends Node
 
-const PORT : int = 9999
+const PORT : int = 8888
 var enet_peer = ENetMultiplayerPeer.new()
 
 @onready var main : Node = get_tree().root.get_node("Main")
@@ -19,8 +19,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().quit()
 	
 func spawn_player(id: int):
+	var player_name = "Testing"
 	var player = Player.instantiate()
 	player.name = str(id)
+	player.get_node_or_null("PlayerController").player_name = player_name
 	players.add_child(player, true)
 	
 func remove_player(id: int):

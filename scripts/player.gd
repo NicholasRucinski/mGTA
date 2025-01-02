@@ -21,6 +21,9 @@ var jump_double = true
 
 var coins = 0
 
+@export var player_name : String
+@onready var player_name_label = $Character/PlayerName
+
 @onready var particles_trail = $ParticlesTrail
 @onready var sound_footsteps = $SoundFootsteps
 @onready var model = $Character
@@ -36,6 +39,12 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if not is_multiplayer_authority(): return
 	camera.current = true
+	player_name_label.text = player_name
+	
+	if multiplayer.get_unique_id() == str(get_parent_node_3d().name).to_int():
+		player_name_label.hide()
+	else:
+		player_name_label.show()
 
 func _physics_process(delta):
 	if not is_multiplayer_authority(): return

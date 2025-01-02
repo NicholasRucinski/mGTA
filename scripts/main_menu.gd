@@ -1,5 +1,7 @@
 extends Control
 
+@onready var name_text_field = $MarginContainer/HBoxContainer/VBoxContainer/TextEdit
+
 func on_start_server_pressed() -> void:
 	Game.enet_peer.create_server(Game.PORT)
 	multiplayer.multiplayer_peer = Game.enet_peer
