@@ -48,6 +48,12 @@ properties/5/replication_mode = 1
 properties/6/path = NodePath("Character/PlayerName:text")
 properties/6/spawn = true
 properties/6/replication_mode = 1
+properties/7/path = NodePath(".:visible")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath("SoundFootsteps:playing")
+properties/8/spawn = true
+properties/8/replication_mode = 2
 
 [node name="Player" type="Node3D"]
 
@@ -61,21 +67,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("CapsuleShape3D_gdq8c")
 
 [node name="Character" parent="PlayerController" instance=ExtResource("2_nero3")]
-
-[node name="leg-left" parent="PlayerController/Character/character/root" index="0"]
-transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0.125, 0.17625, -0.02375)
-
-[node name="leg-right" parent="PlayerController/Character/character/root" index="1"]
-transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -0.125, 0.17625, -0.02375)
-
-[node name="torso" parent="PlayerController/Character/character/root" index="2"]
-transform = Transform3D(1, 0, 0, 0, 0.996194, 0.0871557, 0, -0.0871557, 0.996194, -1.80478e-15, 0.17625, -0.02375)
-
-[node name="arm-left" parent="PlayerController/Character/character/root/torso" index="0"]
-transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.3, 0.175, 0)
-
-[node name="arm-right" parent="PlayerController/Character/character/root/torso" index="1"]
-transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, -0.3, 0.1195, 0)
 
 [node name="PlayerName" type="Label3D" parent="PlayerController/Character"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54858, 0)

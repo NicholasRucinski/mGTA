@@ -2,7 +2,6 @@ extends CharacterBody3D
 
 signal coin_collected
 
-#@export_subgroup("Components")
 @onready var view: Node3D = $"../View"
 @onready var camera: Node3D = view.get_node_or_null("Camera")
 
@@ -69,7 +68,7 @@ func _physics_process(delta):
 	rotation.y = lerp_angle(rotation.y, rotation_direction, delta * 10)
 
 	if position.y < -10:
-		get_tree().reload_current_scene()
+		respawn()
 
 	model.scale = model.scale.lerp(Vector3(1, 1, 1), delta * 10)
 
@@ -166,13 +165,14 @@ func collect_coin():
 func get_into_vehicle() -> void:
 	hide()
 	vehicle = current_area
+	vehicle.get_parent_node_3d().set_driver(self)
 	set_collision_layer_value(1, 0)
 	$Area3D.monitoring = false
 	sound_footsteps.playing = false
 	
 func get_out_of_vehicle() -> void:
 	show()
-	vehicle.get_parent_node_3d().deactivate()
+	vehicle.get_parent_node_3d().set_driver(null)
 	vehicle = null
 	$Area3D.monitoring = true
 	sound_footsteps.playing = true
@@ -186,3 +186,6 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 	if area.is_in_group("selectable"):
 		current_area = null
 		area.select()
+
+func respawn():
+	global_transform.origin = Vector3.ZERO

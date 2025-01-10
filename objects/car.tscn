@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=4 uid="uid://dx4kpjbfin48a"]
+[gd_scene load_steps=20 format=4 uid="uid://dx4kpjbfin48a"]
 
-[ext_resource type="Script" path="res://objects/vehicle_body_3d.gd" id="1_1ddis"]
-[ext_resource type="Script" path="res://objects/selectable.gd" id="1_enhqs"]
+[ext_resource type="Script" path="res://scripts/vehicle_body_3d.gd" id="1_1ddis"]
+[ext_resource type="Script" path="res://scripts/selectable.gd" id="1_enhqs"]
 [ext_resource type="Texture2D" uid="uid://kphpjddupuki" path="res://models/Vehicles/Textures/colormap.png" id="3_vie2q"]
+[ext_resource type="Script" path="res://scripts/state.gd" id="4_0n5sc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_573tq"]
 friction = 0.5
@@ -190,30 +191,15 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_bt0j1")
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kcykn"]
-properties/0/path = NodePath(".:engine_force")
+properties/0/path = NodePath(".:sync_driver_node")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:steering")
+properties/1/path = NodePath(".:sync_position")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:brake")
+properties/2/path = NodePath(".:sync_rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath(".:position")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-properties/4/path = NodePath(".:rotation")
-properties/4/spawn = true
-properties/4/replication_mode = 1
-properties/5/path = NodePath(".:is_active")
-properties/5/spawn = true
-properties/5/replication_mode = 1
-properties/6/path = NodePath(".:engine_power")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath("InteractionArea:is_selected")
-properties/7/spawn = true
-properties/7/replication_mode = 1
 
 [node name="Car" type="Node3D" groups=["selectable"]]
 transform = Transform3D(5.4, 0, 0, 0, 5.4, 0, 0, 0, 5.4, 0, 0, 0)
@@ -303,5 +289,8 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 mesh = SubResource("ArrayMesh_xuhr4")
 skeleton = NodePath("")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="VehicleBody3D"]
+[node name="State" type="Node" parent="VehicleBody3D"]
+script = ExtResource("4_0n5sc")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="VehicleBody3D/State"]
 replication_config = SubResource("SceneReplicationConfig_kcykn")

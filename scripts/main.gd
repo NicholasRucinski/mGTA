@@ -7,6 +7,7 @@ var enet_peer = ENetMultiplayerPeer.new()
 @onready var players : Node = main.get_node("Players")
 
 var Player = preload("res://objects/player.tscn")
+var Car = preload("res://objects/car.tscn")
 var menu : Control = null
 var map : Node = null
 
@@ -30,7 +31,7 @@ func remove_player(id: int):
 	if player:
 		player.queue_free()
 	
-func load_map():
+func load_map() -> void:
 	if map != null:
 		map.queue_free()
 	if menu != null:
@@ -39,7 +40,7 @@ func load_map():
 		
 	map = preload("res://scenes/city.tscn").instantiate()
 	main.add_child(map)
-	
+
 func upnp_setup():
 	var upnp = UPNP.new()
 	
