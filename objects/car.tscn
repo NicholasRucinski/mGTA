@@ -1,9 +1,9 @@
-[gd_scene load_steps=20 format=4 uid="uid://dx4kpjbfin48a"]
+[gd_scene load_steps=21 format=4 uid="uid://dx4kpjbfin48a"]
 
 [ext_resource type="Script" path="res://scripts/vehicle_body_3d.gd" id="1_1ddis"]
 [ext_resource type="Script" path="res://scripts/selectable.gd" id="1_enhqs"]
 [ext_resource type="Texture2D" uid="uid://kphpjddupuki" path="res://models/Vehicles/Textures/colormap.png" id="3_vie2q"]
-[ext_resource type="Script" path="res://scripts/state.gd" id="4_0n5sc"]
+[ext_resource type="Script" path="res://objects/car_input.gd" id="4_wsse5"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_573tq"]
 friction = 0.5
@@ -191,15 +191,20 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_bt0j1")
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kcykn"]
-properties/0/path = NodePath(".:sync_driver_node")
+properties/0/path = NodePath(".:steering_input")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:sync_position")
+properties/1/path = NodePath(".:acceleration")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:sync_rotation")
-properties/2/spawn = true
-properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0jl6c"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="Car" type="Node3D" groups=["selectable"]]
 transform = Transform3D(5.4, 0, 0, 0, 5.4, 0, 0, 0, 5.4, 0, 0, 0)
@@ -289,8 +294,13 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 mesh = SubResource("ArrayMesh_xuhr4")
 skeleton = NodePath("")
 
-[node name="State" type="Node" parent="VehicleBody3D"]
-script = ExtResource("4_0n5sc")
+[node name="Input" type="Node" parent="VehicleBody3D"]
+script = ExtResource("4_wsse5")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="VehicleBody3D/State"]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="VehicleBody3D/Input"]
 replication_config = SubResource("SceneReplicationConfig_kcykn")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="VehicleBody3D"]
+replication_config = SubResource("SceneReplicationConfig_0jl6c")
+
+[connection signal="new_input" from="VehicleBody3D/Input" to="VehicleBody3D" method="_on_input_new_input"]
